@@ -5,6 +5,7 @@ import Lista from '../../components/lista/Lista';
 import './CadastroGenero.css';
 import { useEffect,useState } from 'react';
 
+
 import api from '../../Services/services';
 
 //importar sweet alert
@@ -14,6 +15,8 @@ const CadastroGenero = () => {
 
     //nome do genero
     const [genero, setGenero] = useState("");
+    const [listaGenero, setlistaGenero] = useState([]);
+    // const [deletaGenero, setdeletaGenero] = useState([]);
 
     function alerta(icone, mensagem){
        
@@ -34,7 +37,6 @@ const CadastroGenero = () => {
             });
     
     }
-
     
     async function cadastrarGenero(evt){
         evt.preventDefault();
@@ -48,7 +50,7 @@ const CadastroGenero = () => {
         try {
             //cadastrar um genero: post
             await api.post("genero", {nome: genero});
-            alerta("sucess", "Cadastro realizado com sucesso!");
+            alerta("success", "Cadastro realizado com sucesso!");
             setGenero("");
         } catch (error){
            alerta("error", "Erro! entre em contato com o suporte!");
@@ -61,6 +63,44 @@ const CadastroGenero = () => {
 
 }
 
+    async function listarGenero(){
+        try {
+        //await -> Aguarde uma resp da solicitacao
+        const resposta = await api.get("genero");
+            // console.log(resposta);
+            setlistaGenero(resposta.data);
+            
+        } catch (error) {
+        console.log(error);
+        }
+    }
+
+    //funcao de excluir o genero
+    async function deletarGenero(id) {
+
+        Swal.fire({
+            title: "Voce tem certeza?",
+            text: "voce apagará isso para sempre!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, Deletar isso!"
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            
+        await api.delete(`genero/${id}`);
+
+        Swal.fire({
+        title: "Deleted!",
+        text: "Your file has been deleted.",
+        icon: "success"
+        });
+    }
+    });
+listarGenero();   
+    
+}
     //teste: validar o genero
 
     // useEffect(() => {
@@ -69,6 +109,11 @@ const CadastroGenero = () => {
 
     //fim do teste
 
+   // Assim que a pagina renderizar, o metodo listarGenero() será chamado
+    useEffect(() => {
+        listarGenero();
+    }, []);
+   
     return(
         <>
             <Header/>
@@ -89,9 +134,17 @@ const CadastroGenero = () => {
             </main>
             
             <Lista 
-            lista="Gênero" 
+            titulolista="Gênero" 
             visible="none"
+
+            //atribuir para lista, o meu estado atual:
+            lista = {listaGenero}
+
+            deletarGenero = {deletarGenero}
             />
+
+        
+
 
             <Footer/>
         </>

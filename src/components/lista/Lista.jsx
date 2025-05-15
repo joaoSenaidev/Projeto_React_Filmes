@@ -6,7 +6,7 @@ import Excluir from "../../assets/img/trash-can-regular.svg";
 const Lista = (props) => {
     return(
         <section className="layout_grid listagem">
-            <h1>{`Lista de ${props.lista}`}</h1>
+            <h1>{`Lista de ${props.titulolista}`}</h1>
             <hr/>
             <div className="tabela">
                 <table>
@@ -23,12 +23,35 @@ const Lista = (props) => {
                     </thead>
                     {/* tbody => corpo da tabela */}
                     <tbody>
-                        <tr className="item_lista">
-                            <td data-cell="Nome">Velozes e furiosos</td>
-                            <td data-cell="Genero" style={{display:props.visible}}>Ação</td>
-                            <td data-cell="Editar"><img src={Editar} alt="Caneta" /></td>
-                            <td data-cell="Excluir"><img src={Excluir} alt="Lixeira" /></td>
-                        </tr>
+                        {/* verificar se a lista esta vindo vazia */}
+                        {/* usando o if terciario */}
+                        {props.lista && props.lista.length > 0 ? (
+                            //vamos mapear os itens da lista
+                            props.lista.map((item) => (
+                                <tr className="item_lista" key={item.idGereno}>
+                                    <td data-cell="Nome">
+                                        {item.nome}
+                                    </td>
+                                    <td data-cell="Genero" style={{display:props.visible}}>Ação</td>
+                                    <td data-cell="Editar">
+                                        <img 
+                                        src={Editar}
+                                        alt="Caneta"
+                                        />
+                                    </td>
+                                    <td data-cell="Excluir">
+                                        <img 
+                                        src={Excluir}  
+                                        alt="Lixeira"
+                                        onClick={() => props.deletarGenero(item.idGereno)} 
+                                        /></td>
+                                </tr>
+                            ))
+                        ) : 
+                        (
+                            <p>Nenhum gênero foi encontrado.</p>
+                        )
+                    }
                     </tbody>
                 </table>
             </div>
