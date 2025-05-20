@@ -37,7 +37,9 @@ const Lista = (props) => {
                                         <img 
                                         src={Editar}
                                         alt="Caneta"
+                                        onClick={() => props.funcEditar(item)}
                                         />
+                                        
                                     </td>
                                     <td data-cell="Excluir">
                                         <img 

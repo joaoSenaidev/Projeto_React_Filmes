@@ -41,7 +41,7 @@ const CadastroGenero = () => {
     async function cadastrarGenero(evt){
         evt.preventDefault();
         //verificar se o input esta vindo vazio
-    if (genero.trim() != "") {
+    if (genero.trim() !== "") {
             // alert("O campo precisa estar preenchido!!")
 
         
@@ -107,9 +107,38 @@ const CadastroGenero = () => {
     }
     listarGenero();   
     });
-
-    
 }
+
+    async function editarGenero (genero) {
+        // console.log(genero);
+        const{ value: novoGenero } = await Swal.fire({
+                title: "Modifique o seu Gênero",
+                input: "text",
+                inputLabel: "Novo Gênero",
+                inputValue: genero.nome,
+            showCancelButton: true,
+        inputValidator: (value) => {
+            if (!value) {
+                return "O campo precisa estar preenchido!!";
+            }
+        }
+    });
+        if (novoGenero) {
+            try {
+                // console.log(genero.nome);
+                // console.log(novoGenero);
+                
+                api.put(`genero/${genero.idGereno}`, {nome: novoGenero});
+                Swal.fire(`O genero modificado ${novoGenero}`);
+                listaGenero();
+            } catch (error) {
+                console.log(error);
+                
+            }
+
+}
+}
+
   
     //teste: validar o genero
 
@@ -122,7 +151,7 @@ const CadastroGenero = () => {
    // Assim que a pagina renderizar, o metodo listarGenero() será chamado
     useEffect(() => {
         listarGenero();
-    }, []);
+    }, [listaGenero]);
 
    
     return(
@@ -152,6 +181,8 @@ const CadastroGenero = () => {
             lista = {listaGenero}
 
             deletarGenero = {deletarGenero}
+
+            funcEditar={editarGenero}
             />
 
         
@@ -161,5 +192,6 @@ const CadastroGenero = () => {
         </>
     )
 }
+
 
 export default CadastroGenero;
