@@ -52,6 +52,8 @@ const CadastroGenero = () => {
             await api.post("genero", {nome: genero});
             alerta("success", "Cadastro realizado com sucesso!");
             setGenero("");
+            //atualiza a minha lista
+            listarGenero();
         } catch (error){
            alerta("error", "Erro! entre em contato com o suporte!");
            console.log(error);
@@ -85,22 +87,30 @@ const CadastroGenero = () => {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
+            cancelButtonText: "Não Deletar!",
             confirmButtonText: "Sim, Deletar isso!"
     }).then(async (result) => {
         if (result.isConfirmed) {
-            
-        await api.delete(`genero/${id}`);
+            try {
+                await api.delete(`genero/${id}`);
+                
+            } catch (error) {
+                console.log(error);
+                
+            }
 
         Swal.fire({
-        title: "Deleted!",
-        text: "Your file has been deleted.",
+        title: "Deletado!!",
+        text: "Um Genero Foi Excluído.",
         icon: "success"
         });
     }
+    listarGenero();   
     });
-listarGenero();   
+
     
 }
+  
     //teste: validar o genero
 
     // useEffect(() => {
@@ -113,6 +123,7 @@ listarGenero();
     useEffect(() => {
         listarGenero();
     }, []);
+
    
     return(
         <>
